@@ -1,0 +1,57 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Кинотеатр" 
+        Height="600" Width="1300"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110" MinWidth="110" MaxWidth="250"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Background="Beige" >
+            <Button x:Name="CountriesButton" Content="Страны" Height="25" 
+                    Margin="5,5,5,0" Click="CountriesButton_Click" />
+            <Button x:Name="StylesButton" Content="Жанры" Height="25" 
+                    Margin="5,5,5,0" Click="StylesButton_Click"/>
+            <Button x:Name="FilmsButton" Content="Фильмы" Height="25"
+                    Margin="5,5,5,0" Click="FilmsButton_Click"/>
+            <Button x:Name="HallsButton" Content="Залы" Height="25"
+                    Margin="5,5,5,0" Click="HallsButton_Click"/>
+            <Button x:Name="PlacesButton" Content="Места" Height="25"
+                    Margin="5,5,5,0" Click="PlacesButton_Click"/>
+            <Button x:Name="SessionsButton" Content="Сеансы" Height="25"
+                    Margin="5,5,5,0" Click="SessionsButton_Click"/>
+        </StackPanel>
+
+        <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" 
+                      Width="3" HorizontalAlignment="Stretch" />
+
+        <Frame x:Name="RootFrame" Grid.Column="2" Grid.Row="0"
+               NavigationUIVisibility="Hidden" LoadCompleted="RootFrame_LoadCompleted"/>
+
+        <Rectangle Grid.Column="2" Grid.Row="1" Fill="Beige" />
+        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button x:Name="PreviosPageButton" Content="Назад" Width="75"
+                    Margin="5,5,0,5" Click="PreviosPageButton_Click"/>
+            <Button x:Name="NextPageButton" Content="Вперед" Width="75" 
+                    Margin="5,5,0,5" Click="NextPageButton_Click"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="ClosePageButton" Content="Закрыть страницу" 
+                    Width="120" Margin="5" Click="ClosePageButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

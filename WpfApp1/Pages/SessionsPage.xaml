@@ -1,0 +1,123 @@
+﻿<Page x:Class="WpfApp1.Pages.SessionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="SessionsPage" Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="500"/>
+            <ColumnDefinition Width="4" x:Name="SplitterColumn"/>
+            <ColumnDefinition MinWidth="200"/>
+            <ColumnDefinition Width="4" x:Name="SplitterColumn1"/>
+            <ColumnDefinition Width="0" x:Name="ChangeColumn" MaxWidth="300"/>
+            <!--x:Name="ChangeColumn"-->
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+        <!--<Label Content="Сеансы" Grid.ColumnSpan="3"/>-->
+
+
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="4" Height="25" Margin="0,5,0,0" >
+            <Button x:Name="AddSessionButton" Content="Добавить" Width="75" Margin="5,0,0,0" Click="ShowButtonSessions"/>
+            <Button x:Name="CopySessionButton" Content="Копировать" Width="75" Margin="5,0,0,0" Click="ShowButtonSessions"/>
+            <Button x:Name="EditSessionButton" Content="Изменить" Width="75" Margin="5,0,0,0" Click="ShowButtonSessions"/>
+            <Button x:Name="DeleteSessionButton" Content="Удалить" Width="75" Margin="5,0,0,0" Click="DeleteSessionButton_Click"/>
+            <Button x:Name="BuyTicketButton" Content="Купить" Width="75" Margin="5,0,0,0" Click="BuyTicket"/>
+            <ComboBox x:Name="FilterComboBox" Margin="5, 0, 5, 0" Width="180" SelectionChanged="FilterComboBox_SelectionChanged"/>
+            <TextBox x:Name="FilterTextBox" Margin="0, 0, 5, 0" Width="285" TextChanged="FilterTextBox_TextChanged"/>
+        </StackPanel>
+
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="3" Height="25" Margin="0,5,0,5" >
+            <Button x:Name="FirstBlockButton" Content="В начало" Width="60" Margin="5,0,0,0" Click="FirstBlockButton_Click" />
+            <Button x:Name="PreviosBlockButton" Content="Назад" Width="60" Margin="5,0,0,0" Click="PreviosBlockButton_Click" />
+            <Label Margin="15,0,0,0" Content="Страница:"/>
+            <Label x:Name="BlockNumLabel" Margin="-5,0,0,0" Content="{Binding Path=BlockNum}"/>
+            <Label Margin="-5,0,0,0" Content="из"/>
+            <Label x:Name="BlockCountLabel" Margin="-5,0,0,0" Content="{Binding Path=BlockCount}"/>
+            <Button x:Name="NextBlockButton" Content="Вперед" Width="60" Margin="15,0,0,0" Click="NextBlockButton_Click" />
+            <Button x:Name="LastBlockButton" Content="В конец" Width="60" Margin="5,0,0,0" Click="LastBlockButton_Click" />
+            <Label Margin="15,0,0,0" Content="Количество записей на странице:"/>
+            <TextBox x:Name="BlockRecordsCountTextBox" Width="50" Text="{Binding Path=BlockRecordsCount, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <DockPanel x:Name="SessionsDataGridDockPanel" Grid.Row="1">
+            <DataGrid Language="ru-RU" x:Name="SessionsDataGrid" MouseDoubleClick="ShowButtonSessions" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Фильм" Binding="{Binding Path=FILMS.film_name}" Width="10*"/>
+                    <DataGridTextColumn Header="Зал" Binding="{Binding Path=hall_id}" Width="10*"/>
+                    <DataGridTextColumn Header="Дата показа" Binding="{Binding Path=session_date, StringFormat=\{0:dd MMMM yyyy\}}" Width="10*"/>
+                    <DataGridTextColumn Header="Время показа" Binding="{Binding Path=session_time}" Width="10*"/>
+                    <DataGridTextColumn Header="Стоимость билета" Binding="{Binding Path=ticket_price}" Width="10*"/>
+                    <DataGridTemplateColumn Header="Управление">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Изм." Width="30" Margin="5,0,0,0" FontSize="8" Click="ShowButtonSessions"/>
+                                    <Button Content="Удал." Width="30" Margin="5,0,5,0" FontSize="8" Click="DeleteSessionButton_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+        <GridSplitter x:Name="SessionsAndTicketsGridSplitter" Grid.Column="1" Grid.Row="1" Width="3" HorizontalAlignment="Center" />
+        <!--Detail-таблица-->
+        <DataGrid x:Name="TicketsDataGrid"
+                  MouseDoubleClick="BuyTicket"
+                  ItemsSource="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.TICKETS}"
+                  Grid.Row="1" Grid.Column="2" 
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="True"
+                  KeyDown="DeleteTicket"
+                  BeginningEdit="Grid_BegginingEdit">
+            
+            <!--<DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Купить" Click="BuyTicket"/>
+                </ContextMenu>-->
+            <!--</DataGrid.ContextMenu>-->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Ряд" Binding="{Binding Path=PLACES.row}" Width="4*"/>
+                <DataGridTextColumn Header="Место" Binding="{Binding Path=PLACES.place}" Width="5*"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Path=sold_or_not}" Width="5*"/>
+                
+                <!--<DataGridTextColumn Header="Дата выдачи" Binding="{Binding Path=CommissionDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="80"/>-->
+                <!--<DataGridTextColumn Header="Дата возврата" Binding="{Binding Path=DecommissionDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="90"/>-->
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <GridSplitter HorizontalAlignment="Stretch" Width="5" Grid.Column="1" Grid.Row="1"/>
+        <StackPanel  Orientation="Vertical" Grid.Row="1" Grid.Column="4">
+            <Button Content="X" Click="CloseEdChangeClick" Grid.Column="2" Grid.Row="1" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            <Label x:Name="FilmLabel" Content="Фильм" Foreground="Black"/>
+            <ComboBox x:Name="FilmComboBox" DisplayMemberPath="film_name" SelectedItem="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.FILMS}"/>
+            
+            <Label x:Name="HallLabel" Content="Зал" Foreground="Black"/>
+            <ComboBox x:Name="HallComboBox" DisplayMemberPath="hall_id" SelectedItem="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.HALLS}"/>
+            <Label x:Name="DateLabel" Content="Дата показа" Foreground="Black"/>
+            <DatePicker IsTodayHighlighted="true" Text="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.session_date}" IsDropDownOpen="True" SelectedDateFormat="Short" x:Name="DateTextBox"/>
+            <Label x:Name="TimeLabel" Content="Время показа" Foreground="Black"/>
+            <TextBox Text="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.session_time}" x:Name="TimeTextBox"/>
+            <Label x:Name="PriceLabel" Content="Стоимость билета" Foreground="Black"/>
+            <TextBox Text="{Binding ElementName=SessionsDataGrid, Path=SelectedItem.ticket_price}" x:Name="PriceTextBox" KeyDown="PriceTextBox_KeyPress"/>
+
+            
+        <!--добавление записи-->
+        
+            <Button Height="25" Content="Принять" Click="CommitButtonSession" Margin="0 10 0 10" VerticalAlignment="Bottom"/>
+        </StackPanel>
+    </Grid>
+</Page>
